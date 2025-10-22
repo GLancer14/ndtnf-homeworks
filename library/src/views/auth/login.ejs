@@ -1,0 +1,17 @@
+<%- include("../port/layout-start") %>
+<%- include("../port/header", { user: user }) %>
+
+<h2 class="page-header">Войти</h2>
+<form class="form_login" action="/api/user/login" method="POST">
+  <label class="login_username-label">
+    <span class="login_username-desc">Имя пользователя</span>
+    <input class="login_username-input" name="username" type="text" required>
+  </label>
+  <label class="login_password-label">
+    <span class="login_password-desc">Пароль</span>
+    <input class="login_password-input" name="password" type="password" required>
+  </label>
+  <button class="login_submit">Отправить</button>
+</form>
+
+<%- include("../port/layout-end") %>

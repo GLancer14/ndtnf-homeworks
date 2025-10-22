@@ -16,3 +16,5 @@ abstract class BookRepository {
   abstract updateBook(id: number, updatedBook: Book): void;
   abstract deleteBook(id: number): void;
 }
+
+exports.BookRepository = BookRepository;
