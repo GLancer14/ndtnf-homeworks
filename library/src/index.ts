@@ -40,7 +40,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/books", booksApiRoutes);
 app.use(error404);
 
-async function start(PORT, DBURL) {
+async function start(PORT: string | number, DBURL: string) {
   try {
     await mongoose.connect(DBURL);
     server.listen(PORT, () => console.log(`App is listening on a port ${PORT}`));

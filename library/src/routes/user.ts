@@ -7,11 +7,11 @@ const isAuth = require("../middleware/isAuth");
 
 passport.use("local", authStrategy);
 
-passport.serializeUser((user, cb) => {
+passport.serializeUser((user: any, cb: any) => {
   cb(null, user.id);
 });
 
-passport.deserializeUser(async (id, cb) => {
+passport.deserializeUser(async (id: any, cb: any) => {
   try {
     const user = await Users.findById(id);
     cb(null, user);
@@ -20,16 +20,16 @@ passport.deserializeUser(async (id, cb) => {
   }
 });
 
-router.get("/login", (req, res) => {
+router.get("/login", (req: any, res: any) => {
   res.render("../views/auth/login", { user: req.user });
 });
 
-router.get("/signup", (req, res) => {
+router.get("/signup", (req: any, res: any) => {
   res.render("../views/auth/signup", { user: null });
 });
 
-router.get("/logout", (req, res) => {
-  req.logout(err => {
+router.get("/logout", (req: any, res: any) => {
+  req.logout((err: any) => {
     if (err) {
       throw err;
     }
@@ -37,7 +37,7 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-router.get("/me", isAuth, (req, res) => {
+router.get("/me", isAuth, (req: any, res: any) => {
   res.render("../views/user/profile", { user: req.user });
 });
 
@@ -46,7 +46,7 @@ router.post("/login", passport.authenticate("local", {
   successRedirect: "/",
 }));
 
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", async (req: any, res: any, next: any) => {
   const newUser = new Users({ ...req.body });
   try {
     await newUser.save();

@@ -5,7 +5,7 @@ const container = require("../container");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: any, res: any) => {
   try {
     const repo = container.get(BookRepository);
     const books = await repo.getBooks();
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", fileMulter.single("book"), async (req, res) => {
+router.post("/", fileMulter.single("book"), async (req: any, res: any) => {
   const repo = container.get(BookRepository);
   try {
     await repo.createBook({
@@ -31,7 +31,7 @@ router.post("/", fileMulter.single("book"), async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req: any, res: any) => {
   const repo = container.get(BookRepository);
   try {
     const book = await repo.getBook(req.params.id);
@@ -46,7 +46,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", fileMulter.single("book"), async (req, res) => {
+router.put("/:id", fileMulter.single("book"), async (req: any, res: any) => {
   const repo = container.get(BookRepository);
   try {
     const book = await repo.updateBook(req.params.id, {
@@ -57,7 +57,7 @@ router.put("/:id", fileMulter.single("book"), async (req, res) => {
 
     if (book) {
       if (book.fileBook !== "" && req.file) {
-        fs.rm(__dirname + `/../public/books/${book.fileBook}`, err => {
+        fs.rm(__dirname + `/../public/books/${book.fileBook}`, (err: any) => {
           if (err) {
             throw err;
           }
@@ -74,13 +74,13 @@ router.put("/:id", fileMulter.single("book"), async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req: any, res: any) => {
   const repo = container.get(BookRepository);
   try {
     const book = await repo.getBook(req.params.id);
     if (book) {
       if (book.fileBook !== "") {
-        fs.rm(__dirname + `/../public/books/${book.fileBook}`, err => {
+        fs.rm(__dirname + `/../public/books/${book.fileBook}`, (err: any) => {
           if (err) {
             throw err;
           }
@@ -98,12 +98,12 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id/download", async (req, res) => {
+router.get("/:id/download", async (req: any, res: any) => {
   const repo = container.get(BookRepository);
   try {
     const book = await repo.getBook(req.params.id);
     if (book) {
-      res.download(__dirname + `/../public/books/${book.fileBook}`, err => {
+      res.download(__dirname + `/../public/books/${book.fileBook}`, (err: any) => {
         if (err) {
           res.status(404);
           res.redirect("/404");

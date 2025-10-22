@@ -2,15 +2,15 @@ const express = require("express");
 const http = require("http");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  http.get("http://localhost:3000/api/books", apiRes => {
+router.get("/", (req: any, res: any) => {
+  http.get("http://localhost:3000/api/books", (apiRes: any) => {
     if (apiRes.statusCode !== 200) {
       throw new Error("Network error");
     }
 
     apiRes.setEncoding("utf-8");
     let rawData = "";
-    apiRes.on("data", chunk => {
+    apiRes.on("data", (chunk: any) => {
       rawData += chunk;
     });
     apiRes.on("end", () => {
@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
         user: req.user,
       });
     });
-  }).on("error", e => {
+  }).on("error", (e: any) => {
     console.log(e);
   });
 });

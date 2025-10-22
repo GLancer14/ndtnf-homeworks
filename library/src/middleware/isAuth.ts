@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+module.exports = (req: any, res: any, next: any) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/api/user/login");
   }

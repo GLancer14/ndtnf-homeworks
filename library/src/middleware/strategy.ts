@@ -1,7 +1,7 @@
 const LocalStrategy = require("passport-local").Strategy;
 const Users = require("../models/users");
 
-const verify = async (username, password, done) => {
+const verify = async (username: string, password: string, done: any) => {
   try {
     const user = await Users.findOne({ username: username });
     if (!user || user.password !== password) {

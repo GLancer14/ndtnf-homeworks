@@ -1,9 +1,9 @@
 const socketIO = require("socket.io");
 const Books = require("../models/books");
 
-function createSocketIO(server) {
+function createSocketIO(server: any) {
   const io = socketIO(server);
-  io.on("connection", (socket) => {
+  io.on("connection", (socket: any) => {
     const { id } = socket;
     console.log(`Socket connected: ${id}`);
 
@@ -11,7 +11,7 @@ function createSocketIO(server) {
     console.log(`Socket room name: ${roomname}`);
 
     socket.join(roomname);
-    socket.on("message-to-room", async (msg) => {
+    socket.on("message-to-room", async (msg: any) => {
       try {
         await Books.findByIdAndUpdate(roomname, {
           $push: {

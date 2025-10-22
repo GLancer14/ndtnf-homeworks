@@ -2,17 +2,17 @@ const express = require("express");
 const http = require("http");
 const router = express.Router();
 
-router.get("/:id", (req, res) => {
+router.get("/:id", (req: any, res: any) => {
   const { id } = req.params;
 
-  http.get(`http://localhost:3000/api/books/${id}`, apiRes => {
+  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
     if (apiRes.statusCode !== 200) {
       throw new Error("Request error");
     }
 
     apiRes.setEncoding("utf-8");
     let rawData = "";
-    apiRes.on("data", chunk => {
+    apiRes.on("data", (chunk: string) => {
       rawData += chunk;
     });
     apiRes.on("end", () => {
@@ -25,9 +25,9 @@ router.get("/:id", (req, res) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }, apiRes => {
+      }, (apiRes: any) => {
         let data = "";
-        apiRes.on("data", chunk => {
+        apiRes.on("data", (chunk: string) => {
           data += chunk;
         });
         apiRes.on("end", () => {
@@ -39,28 +39,28 @@ router.get("/:id", (req, res) => {
             user: req.user,
           });
         });
-      }).on("error", e => {
+      }).on("error", (e: any) => {
         console.error(e);
       });
   
       request.end();
     });
-  }).on("error", e => {
+  }).on("error", (e: any) => {
     console.log(e);
   });
 });
 
-router.get("/book/update/:id", (req, res) => {
+router.get("/book/update/:id", (req: any, res: any) => {
   const { id } = req.params;
 
-  http.get(`http://localhost:3000/api/books/${id}`, apiRes => {
+  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
     if (apiRes.statusCode !== 200) {
       throw new Error("Request error");
     }
 
     apiRes.setEncoding("utf-8");
     let rawData = "";
-    apiRes.on("data", chunk => {
+    apiRes.on("data", (chunk: string) => {
       rawData += chunk;
     });
     apiRes.on("end", () => {
@@ -71,12 +71,12 @@ router.get("/book/update/:id", (req, res) => {
         user: req.user,
       });
     });
-  }).on("error", e => {
+  }).on("error", (e: any) => {
     console.log(e);
   });
 });
 
-router.get("/book/add", (req, res) => {
+router.get("/book/add", (req: any, res: any) => {
   res.render("../views/books/create", { user: req.user });
 });
 
