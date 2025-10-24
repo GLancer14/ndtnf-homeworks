@@ -1,9 +1,11 @@
-const express = require("express");
-const passport = require("passport");
+import express, {type Request, type Response, type NextFunction} from "express";
+import passport from "passport";
+import authStrategy from "../middleware/strategy.js";
+import isAuth from "../middleware/isAuth.js";
+import { container } from "../infrastructure/container.js";
+import { UsersService } from "./users.service.js";
+
 const router = express.Router();
-const Users = require("../models/users");
-const authStrategy = require("../middleware/strategy");
-const isAuth = require("../middleware/isAuth");
 
 passport.use("local", authStrategy);
 
@@ -12,23 +14,24 @@ passport.serializeUser((user: any, cb: any) => {
 });
 
 passport.deserializeUser(async (id: any, cb: any) => {
+  const repo = container.get(UsersService);
   try {
-    const user = await Users.findById(id);
+    const user = await repo.findUserById(id);
     cb(null, user);
   } catch(e) {
     cb(e);
   }
 });
 
-router.get("/login", (req: any, res: any) => {
+router.get("/login", (req: Request, res: Response) => {
   res.render("../views/auth/login", { user: req.user });
 });
 
-router.get("/signup", (req: any, res: any) => {
+router.get("/signup", (req: Request, res: Response) => {
   res.render("../views/auth/signup", { user: null });
 });
 
-router.get("/logout", (req: any, res: any) => {
+router.get("/logout", (req: Request, res: Response) => {
   req.logout((err: any) => {
     if (err) {
       throw err;
@@ -37,7 +40,7 @@ router.get("/logout", (req: any, res: any) => {
   res.redirect("/");
 });
 
-router.get("/me", isAuth, (req: any, res: any) => {
+router.get("/me", isAuth, (req: Request, res: Response) => {
   res.render("../views/user/profile", { user: req.user });
 });
 
@@ -46,11 +49,10 @@ router.post("/login", passport.authenticate("local", {
   successRedirect: "/",
 }));
 
-router.post("/signup", async (req: any, res: any, next: any) => {
-  const newUser = new Users({ ...req.body });
+router.post("/signup", async (req: Request, res: Response, next: NextFunction) => {
+  const repo = container.get(UsersService);
   try {
-    await newUser.save();
-
+    await repo.createUser({ ...req.body });
     next();
   } catch(e) {
     res.status(500).json(e);
@@ -60,4 +62,4 @@ router.post("/signup", async (req: any, res: any, next: any) => {
   successRedirect: "/",
 }));
 
-module.exports = router;
+export default router;

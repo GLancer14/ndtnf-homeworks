@@ -1,8 +1,9 @@
-const express = require("express");
-const http = require("http");
+import express, { type Request, type Response } from "express";
+import http from "http";
+
 const router = express.Router();
 
-router.get("/:id", (req: any, res: any) => {
+router.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
 
   http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
@@ -50,7 +51,7 @@ router.get("/:id", (req: any, res: any) => {
   });
 });
 
-router.get("/book/update/:id", (req: any, res: any) => {
+router.get("/book/update/:id", (req: Request, res: Response) => {
   const { id } = req.params;
 
   http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
@@ -80,4 +81,4 @@ router.get("/book/add", (req: any, res: any) => {
   res.render("../views/books/create", { user: req.user });
 });
 
-module.exports = router;
+export default router;

@@ -1,9 +1,13 @@
-const socketIO = require("socket.io");
-const Books = require("../models/books");
+import { Server, Socket, type DefaultEventsMap } from "socket.io";
+import http from "http";
+import Books from "../booksApi/booksApi.model.js";
 
-function createSocketIO(server: any) {
-  const io = socketIO(server);
-  io.on("connection", (socket: any) => {
+type SocketServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
+type IOSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+
+function createSocketIO(server: SocketServer) {
+  const io = new Server(server);
+  io.on("connection", (socket: IOSocket) => {
     const { id } = socket;
     console.log(`Socket connected: ${id}`);
 
@@ -11,7 +15,7 @@ function createSocketIO(server: any) {
     console.log(`Socket room name: ${roomname}`);
 
     socket.join(roomname);
-    socket.on("message-to-room", async (msg: any) => {
+    socket.on("message-to-room", async (msg) => {
       try {
         await Books.findByIdAndUpdate(roomname, {
           $push: {
@@ -37,4 +41,4 @@ function createSocketIO(server: any) {
   return io;
 }
 
-module.exports = createSocketIO;
+export default createSocketIO;
