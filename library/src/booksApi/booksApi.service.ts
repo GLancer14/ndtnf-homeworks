@@ -14,16 +14,7 @@ export class BooksService implements BookRepository {
       return null;
     }
 
-    return {
-      title: book.title,
-      description: book.description,
-      authors: book.authors,
-      favorite: book.favorite,
-      fileCover: book.fileCover,
-      fileName: book.fileName,
-      fileBook: book.fileBook,
-      comments: book.comments,
-    };
+    return book;
   }
 
   async getBooks(): Promise<Book[]> {
@@ -32,7 +23,6 @@ export class BooksService implements BookRepository {
 
   async updateBook(id: string, updatedBook: Book) {
     const book = await Books.findByIdAndUpdate(id, updatedBook);
-
     if (!book) {
       throw new Error("Book doesn't found");
     }
@@ -48,7 +38,6 @@ export class BooksService implements BookRepository {
 
   async deleteBook(id: string) {
     const book = await Books.findById(id);
-
     if (!book) {
       throw new Error("Book doesn't found");
     }

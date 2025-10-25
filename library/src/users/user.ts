@@ -4,11 +4,11 @@ export interface User {
 }
 
 export abstract class UsersRepository {
-  createUser(user: User): void {};
-  findUserById(id: string): Promise<User | null> {
-    return null;
-  };
-  findUserByName(username: string): Promise<User | null> {
-    return null;
-  };
+  abstract createUser(user: User): void;
+  abstract findUserById(id: string): Promise<User | null>;
+  abstract findUserByName(username: string): Promise<User | null>;
 }
+
+export interface UserSerializationCB {
+  (err: Error, id?: unknown): void;
+};

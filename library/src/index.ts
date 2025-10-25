@@ -2,7 +2,8 @@ import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
 import methodOverride from "method-override";
-// import path from "path";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import passport from "passport";
 import http from "http";
@@ -15,12 +16,15 @@ import createSocketIO from "./websocket/websocket.js";
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 const server = new http.Server(app);
 createSocketIO(server);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(methodOverride("_method"));
 
 app.use(session({
@@ -45,10 +49,10 @@ async function start(PORT: string | number, DBURL: string) {
     await mongoose.connect(DBURL);
     server.listen(PORT, () => console.log(`App is listening on a port ${PORT}`));
   } catch(e) {
-    console.log(e)
+    console.log(e);
   }
 }
 
 const PORT = process.env.PORT || 3000;
 const DBURL = process.env.DBURL;
-start(PORT, DBURL)
+start(PORT, DBURL);

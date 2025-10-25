@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
 
-  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
+  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: http.IncomingMessage) => {
     if (apiRes.statusCode !== 200) {
       throw new Error("Request error");
     }
@@ -26,7 +26,7 @@ router.get("/:id", (req: Request, res: Response) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }, (apiRes: any) => {
+      }, (apiRes: http.IncomingMessage) => {
         let data = "";
         apiRes.on("data", (chunk: string) => {
           data += chunk;
@@ -40,13 +40,13 @@ router.get("/:id", (req: Request, res: Response) => {
             user: req.user,
           });
         });
-      }).on("error", (e: any) => {
+      }).on("error", (e: Error) => {
         console.error(e);
       });
   
       request.end();
     });
-  }).on("error", (e: any) => {
+  }).on("error", (e: Error) => {
     console.log(e);
   });
 });
@@ -54,7 +54,7 @@ router.get("/:id", (req: Request, res: Response) => {
 router.get("/book/update/:id", (req: Request, res: Response) => {
   const { id } = req.params;
 
-  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: any) => {
+  http.get(`http://localhost:3000/api/books/${id}`, (apiRes: http.IncomingMessage) => {
     if (apiRes.statusCode !== 200) {
       throw new Error("Request error");
     }
@@ -72,12 +72,12 @@ router.get("/book/update/:id", (req: Request, res: Response) => {
         user: req.user,
       });
     });
-  }).on("error", (e: any) => {
+  }).on("error", (e: Error) => {
     console.log(e);
   });
 });
 
-router.get("/book/add", (req: any, res: any) => {
+router.get("/book/add", (req: Request, res: Response) => {
   res.render("../views/books/create", { user: req.user });
 });
 

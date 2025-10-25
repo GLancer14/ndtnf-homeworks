@@ -6,6 +6,8 @@ COPY package*.json ./
 RUN npm install
 COPY *.js ./
 COPY ./src ./src
+COPY tsconfig.json ./
+COPY eslint.config.mjs ./
 
 EXPOSE 3000
 

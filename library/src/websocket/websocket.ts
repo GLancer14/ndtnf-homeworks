@@ -3,7 +3,7 @@ import http from "http";
 import Books from "../booksApi/booksApi.model.js";
 
 type SocketServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
-type IOSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+type IOSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>;
 
 function createSocketIO(server: SocketServer) {
   const io = new Server(server);

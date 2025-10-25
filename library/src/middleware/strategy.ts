@@ -2,8 +2,12 @@ import passportLocal from "passport-local";
 import { container } from "../infrastructure/container.js";
 import { UsersService } from "../users/users.service.js";
 
+interface VerifyFunctionCB {
+  (error: Error | null, user?: false | Express.User, options?: passportLocal.IVerifyOptions): void;
+};
+
 const LocalStrategy = passportLocal.Strategy;
-const verify = async (username: string, password: string, done: any) => {
+const verify = async (username: string, password: string, done: VerifyFunctionCB) => {
   const repo = container.get(UsersService);
   try {
     const user = await repo.findUserByName(username);
@@ -13,9 +17,14 @@ const verify = async (username: string, password: string, done: any) => {
     }
 
     return done(null, user);
-  } catch(e) {
-    console.log(e);
-    return done(e);
+  } catch(e: unknown) {
+    if (e instanceof Error) {
+      console.log(e);
+      return done(e);
+    } else {
+      console.log("Unknown error");
+      return done({ name: "Unknown error", message: "Unknown error" });
+    }
   }
 };
 

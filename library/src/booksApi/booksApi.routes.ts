@@ -93,7 +93,7 @@ router.get("/:id/download", async (req: Request, res: Response) => {
   try {
     const book = await repo.getBook(req.params.id);
     if (book) {
-      res.download(__dirname + `/../public/books/${book.fileBook}`, (err: any) => {
+      res.download(__dirname + `/../public/books/${book.fileBook}`, (err: Error) => {
         if (err) {
           res.status(404);
           res.redirect("/404");
