@@ -1,38 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { Book } from './types/books.types';
+import { BookDto, UpdateBookDto } from './types/dto/books-dto.types';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Book as BookSchema, BookDocument } from 'src/schemas/book.schema';
+import { Connection, HydratedDocument, Model, QueryWithHelpers } from 'mongoose';
 
 @Injectable()
 export class BooksService {
-  protected books: Book[] = [];
+  constructor(
+    @InjectModel(BookSchema.name) private BookModel: Model<BookDocument>,
+    @InjectConnection() private connection: Connection,
+  ) {}
 
-  getBooks() {
-    return this.books;
+  getBooks(): Promise<BookDocument[]> {
+    return this.BookModel.find().exec();
   }
 
-  createBook(book: Book) {
-    this.books.push(book);
+  createBook(book: BookDto): Promise<BookDocument> {
+    const newBook = new this.BookModel(book);
+    return newBook.save();
   }
 
-  getBook(id: string) {
-    return this.books.find(book => book.id === id);
+  getBook(id: string): Promise<BookDocument | null> {
+    return this.BookModel.findById(id).exec();
   }
 
-  updateBook(id: string, book: Book) {
-    const bookIndex = this.books.findIndex(book => book.id === id);
-    if (bookIndex !== -1) {
-      this.books[bookIndex] = {
-        ...this.books[bookIndex],
-        ...book,
-      };
-      return book;
-    }
+  updateBook(id: string, book: UpdateBookDto): QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument> {
+    return this.BookModel.findOneAndUpdate(
+      { _id: id },
+      book,
+    );
   }
 
-  deleteBook(id: string) {
-    const bookIndex = this.books.findIndex(book => book.id === id);
-    if (bookIndex !== -1) {
-      this.books.splice(bookIndex, 1);
-      return bookIndex;
-    }
+  deleteBook(id: string): QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument> {
+    return this.BookModel.findOneAndDelete({ _id: id });
   }
 }
