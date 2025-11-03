@@ -3,14 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
-  Req,
-  Res,
 } from '@nestjs/common';
-import { type Request, type Response } from 'express';
-import { type HydratedDocument, type QueryWithHelpers } from 'mongoose';
 import { BooksService } from './books.service';
 import { type UpdateBookDto, type BookDto } from './types/dto/books-dto.types';
 import { BookDocument } from 'src/schemas/book.schema';
@@ -30,13 +27,10 @@ export class BooksController {
   }
 
   @Get(":id")
-  async getBook(@Param("id") id: string, @Res() res: Response): Promise<BookDocument | null> {
+  async getBook(@Param("id") id: string): Promise<BookDocument> {
     const book = await this.booksService.getBook(id);
     if (!book) {
-      res.status(404);
-      res.send("Book doesn't found");
-    } else {
-      res.json(book);
+      throw new NotFoundException("Book doesn't found");
     }
 
     return book;
@@ -44,34 +38,24 @@ export class BooksController {
 
   @Put(":id")
   async updateBook(
-    @Req() req: Request,
-    @Res() res: Response,
+    @Param("id") id: string,
     @Body() book: UpdateBookDto,
-  ): Promise<QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument>> {
-    const updatedBook = await this.booksService.updateBook(req.params.id, book);
+  ): Promise<BookDocument> {
+    const updatedBook = await this.booksService.updateBook(id, book);
     if (!updatedBook) {
-      res.status(404);
-      res.send("Book doesn't found");
-    } else {
-      res.redirect("/");
+      throw new NotFoundException("Book doesn't found");
     }
 
     return updatedBook;
   }
 
   @Delete(":id")
-  async deleteBook(
-    @Param("id") id: string,
-    @Res() res: Response
-  ): Promise<QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument>> {
+  async deleteBook(@Param("id") id: string): Promise<{ deleted: boolean }> {
     const deletedBook = await this.booksService.deleteBook(id);
-    if (deletedBook) {
-      res.redirect("/");
-    } else {
-      res.status(404);
-      res.send("Book doesn't found");
+    if (!deletedBook) {
+      throw new NotFoundException("Book doesn't found");
     }
     
-    return deletedBook;
+    return { deleted: true };
   }
 }

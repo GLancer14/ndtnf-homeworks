@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BookDto, UpdateBookDto } from './types/dto/books-dto.types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Book as BookSchema, BookDocument } from 'src/schemas/book.schema';
-import { Connection, HydratedDocument, Model, QueryWithHelpers } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 
 @Injectable()
 export class BooksService {
@@ -24,14 +24,15 @@ export class BooksService {
     return this.BookModel.findById(id).exec();
   }
 
-  updateBook(id: string, book: UpdateBookDto): QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument> {
+  updateBook(id: string, book: UpdateBookDto): Promise<BookDocument | null> {
     return this.BookModel.findOneAndUpdate(
       { _id: id },
       book,
-    );
+      { new: true },
+    ).exec();
   }
 
-  deleteBook(id: string): QueryWithHelpers<HydratedDocument<BookDocument, {}, {}> | null, HydratedDocument<BookDocument, {}, {}>, {}, BookDocument> {
-    return this.BookModel.findOneAndDelete({ _id: id });
+  deleteBook(id: string): Promise<BookDocument | null> {
+    return this.BookModel.findOneAndDelete({ _id: id }).exec();
   }
 }
