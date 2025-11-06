@@ -7,6 +7,8 @@ import {
   mergeAll,
   take,
   Observable,
+  catchError,
+  of,
 } from "rxjs";
 import axios from "axios";
 
@@ -35,10 +37,22 @@ export class RxjsService {
 
   async searchRepositories(text: string, hub: string): Promise<any> {
     let data$: Observable<any>;
+
+    function handleError(err: any) {
+      console.log("Error: " + err);
+      return of(false);
+    }
+
     if (hub === "github") {
-      data$ = this.getGithub(text, 5).pipe(toArray());
+      data$ = this.getGithub(text, 5).pipe(
+        toArray(),
+        catchError(handleError),
+      );
     } else if (hub === "gitlab") {
-      data$ = this.getGitLab(text, 5).pipe(toArray());
+      data$ = this.getGitLab(text, 5).pipe(
+        toArray(),
+        catchError(handleError),
+      );
     } else {
       return new BadRequestException("Unknown hub");
     }
