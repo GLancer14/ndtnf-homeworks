@@ -48,12 +48,12 @@ export class RxjsService {
       return of(false);
     }
 
-    if (hub === "github") {
+    if (hub === ERepoHub.GITHUB) {
       data$ = this.getGithub(text, amount).pipe(
         toArray(),
         catchError(handleError),
       );
-    } else if (hub === "gitlab") {
+    } else if (hub === ERepoHub.GITLAB) {
       data$ = this.getGitLab(text, amount).pipe(
         toArray(),
         catchError(handleError),
