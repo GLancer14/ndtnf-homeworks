@@ -12,30 +12,35 @@ import {
 } from "rxjs";
 import axios from "axios";
 
+export enum ERepoHub {
+  GITHUB = "github",
+  GITLAB = "gitlab",
+}
+
 @Injectable()
 export class RxjsService {
   private readonly githubURL = "https://api.github.com/search/repositories?q=";
   private readonly gitLabURL = "https://gitlab.com/api/v4/projects?search=";
 
-  private getGithub(text: string, count: number): Observable<any> {
+  private getGithub(text: string, amount: number): Observable<any> {
     return from(axios.get(`${this.githubURL}${text}`))
       .pipe(
         map((res: any) => res.data.items),
         mergeAll(),
       )
-      .pipe(take(count));
+      .pipe(take(amount));
   }
 
-  private getGitLab(text: string, count: number): Observable<any> {
+  private getGitLab(text: string, amount: number): Observable<any> {
     return from(axios.get(`${this.gitLabURL}${text}`))
       .pipe(
         map((res: any) => res.data),
         mergeAll(),
       )
-      .pipe(take(count));
+      .pipe(take(amount));
   }
 
-  async searchRepositories(text: string, hub: string): Promise<any> {
+  async searchRepositories(text: string, hub: string, amount: number = 5): Promise<any> {
     let data$: Observable<any>;
 
     function handleError(err: any) {
@@ -44,12 +49,12 @@ export class RxjsService {
     }
 
     if (hub === "github") {
-      data$ = this.getGithub(text, 5).pipe(
+      data$ = this.getGithub(text, amount).pipe(
         toArray(),
         catchError(handleError),
       );
     } else if (hub === "gitlab") {
-      data$ = this.getGitLab(text, 5).pipe(
+      data$ = this.getGitLab(text, amount).pipe(
         toArray(),
         catchError(handleError),
       );
@@ -58,7 +63,7 @@ export class RxjsService {
     }
 
     console.log("hub = ", hub);
-    data$.subscribe(() => {});
+    data$.subscribe();
     return await firstValueFrom(data$);
   }
 }
