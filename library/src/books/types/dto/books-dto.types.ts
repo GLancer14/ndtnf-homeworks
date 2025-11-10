@@ -1,5 +1,4 @@
 export interface BookDto {
-  id: string;
   title: string;
   description: string;
   authors: string;
@@ -8,7 +7,6 @@ export interface BookDto {
 }
 
 export interface UpdateBookDto {
-  id: string;
   title: string;
   description: string;
   authors: string;

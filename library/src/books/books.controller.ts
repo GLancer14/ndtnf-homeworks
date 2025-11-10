@@ -7,10 +7,14 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { type UpdateBookDto, type BookDto } from './types/dto/books-dto.types';
-import { BookDocument } from 'src/schemas/book.schema';
+import { BookDocument } from '../schemas/book.schema';
+import { BookIdValidation, BookBodyValidation } from './books.pipes';
+import { bookSchema } from '../validation/schemas/book.schema';
+import { BookValidationPipe } from '../validation/books.pipe';
 
 @Controller("books")
 export class BooksController {
@@ -21,13 +25,14 @@ export class BooksController {
     return await this.booksService.getBooks();
   }
 
+  @UsePipes(new BookValidationPipe(bookSchema))
   @Post()
-  async createBook(@Body() book: BookDto): Promise<BookDocument> {
+  async createBook(@Body(BookBodyValidation) book: BookDto): Promise<BookDocument> {
     return await this.booksService.createBook(book);
   }
 
   @Get(":id")
-  async getBook(@Param("id") id: string): Promise<BookDocument> {
+  async getBook(@Param("id", BookIdValidation) id: string): Promise<BookDocument> {
     const book = await this.booksService.getBook(id);
     if (!book) {
       throw new NotFoundException("Book doesn't found");
@@ -38,8 +43,8 @@ export class BooksController {
 
   @Put(":id")
   async updateBook(
-    @Param("id") id: string,
-    @Body() book: UpdateBookDto,
+    @Param("id", BookIdValidation) id: string,
+    @Body(BookBodyValidation) book: UpdateBookDto,
   ): Promise<BookDocument> {
     const updatedBook = await this.booksService.updateBook(id, book);
     if (!updatedBook) {
@@ -50,12 +55,12 @@ export class BooksController {
   }
 
   @Delete(":id")
-  async deleteBook(@Param("id") id: string): Promise<{ deleted: boolean }> {
+  async deleteBook(@Param("id", BookIdValidation) id: string): Promise<{ deleted: boolean }> {
     const deletedBook = await this.booksService.deleteBook(id);
     if (!deletedBook) {
       throw new NotFoundException("Book doesn't found");
     }
-    
+
     return { deleted: true };
   }
 }
