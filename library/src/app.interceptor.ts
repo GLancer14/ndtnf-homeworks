@@ -8,7 +8,7 @@ import {
   catchError,
   map,
   Observable,
-  of,
+  throwError,
 } from "rxjs";
 
 @Injectable()
@@ -23,12 +23,7 @@ export class GlobalInterceptor implements NestInterceptor {
             status: "success",
           }
         }),
-        catchError(err => {
-          return of({
-            data: err,
-            status: "fail",
-          });
-        })
+        catchError(err => throwError(() => err))
       );
   }
 }
