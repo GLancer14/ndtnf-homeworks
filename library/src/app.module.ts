@@ -3,14 +3,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { BooksModule } from './books/books.module';
+import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.DBURL || ""),
     BooksModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AuthService],
 })
 export class AppModule {}
