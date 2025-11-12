@@ -10,7 +10,7 @@ export class UsersService {
     @InjectConnection() private connection: Connection,
   ) {}
 
-  findUserById(id: string) {
-    return this.UserModel.findById(id).exec();
+  findOne(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ email: email }).exec();
   }
 }
