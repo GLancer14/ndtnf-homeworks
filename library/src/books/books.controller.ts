@@ -17,7 +17,7 @@ import { BookIdValidation, BookBodyValidation } from './books.pipes';
 import { bookSchema } from '../validation/schemas/book.schema';
 import { BookValidationPipe } from '../validation/books.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller("books")

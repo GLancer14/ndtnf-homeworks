@@ -29,17 +29,14 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async signup(user: any) {
-    try {
-      this.usersService.createUser(user);
-      const payload = {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-      };
-      return this.jwtService.sign(payload);
-    } catch(e) {
-      throw new UnauthorizedException("Registration failed");
-    }
+  signup(user: any) {
+    this.usersService.createUser(user);
+    const payload = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+    };
+
+    return this.jwtService.sign(payload);
   }
 }
