@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { UserDocument, User as UserSchema } from 'src/schemas/user.schema';
+import { User, UserDocument, User as UserSchema } from 'src/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -12,5 +12,10 @@ export class UsersService {
 
   findOne(email: string): Promise<UserDocument | null> {
     return this.UserModel.findOne({ email: email }).exec();
+  }
+
+  createUser(userData: User) {
+    const newUser = new this.UserModel(userData);
+    newUser.save();
   }
 }
