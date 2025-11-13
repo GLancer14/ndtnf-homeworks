@@ -5,3 +5,14 @@ export interface User {
   firstName: string;
   lastName: string;
 }
+
+export type UserJwtPayload = UserDataForJwtPayload & {
+  iat: number;
+  exp: number;
+}
+
+export interface UserDataForJwtPayload {
+  id: string;
+  email: string;
+  firstName: string;
+}

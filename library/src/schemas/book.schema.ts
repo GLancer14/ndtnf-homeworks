@@ -5,13 +5,13 @@ export type BookDocument = Book & Document;
 
 @Schema()
 export class Book {
-  @Prop()
+  @Prop({ required: true })
   public title: string;
 
   @Prop()
   public description: string;
 
-  @Prop()
+  @Prop({ required: true })
   public authors: string;
 
   @Prop()

@@ -1,6 +1,7 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
+import { UserDataForJwtPayload } from "src/users/types/users.types";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {
@@ -8,9 +9,9 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     return super.canActivate(context);
   }
 
-  handleRequest<TUser = any>(err: any, user: any): TUser {
+  handleRequest<TUser = UserDataForJwtPayload>(err: any, user: TUser): TUser {
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw err || new UnauthorizedException("Wrong JWT token");
     }
 
     return user;

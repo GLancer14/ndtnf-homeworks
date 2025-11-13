@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { AuthService } from "../auth.service";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { UserDataForJwtPayload, UserJwtPayload } from "src/users/types/users.types";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,11 +13,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(payload: any) {
-    return {
-      id: payload.id,
-      email: payload.email,
-      firstName: payload.firstName,
-    };
+  public async validate(payload: UserJwtPayload): Promise<UserDataForJwtPayload | undefined> {
+    const user = await this.authService.validateUserByJwt(payload.id);
+    if (!user) {
+      throw new UnauthorizedException("Wrong JWT token");
+    }
+
+    return payload;
   }
 }
