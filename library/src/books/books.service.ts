@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BookDto, UpdateBookDto } from './types/dto/books-dto.types';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Book as BookSchema, BookDocument } from 'src/schemas/book.schema';
+import { Book as BookSchema, BookDocument } from '../schemas/book.schema';
 import { Connection, Model } from 'mongoose';
 
 @Injectable()
@@ -16,8 +16,7 @@ export class BooksService {
   }
 
   createBook(book: BookDto): Promise<BookDocument> {
-    const newBook = new this.BookModel(book);
-    return newBook.save();
+    return this.BookModel.create(book);
   }
 
   getBook(id: string): Promise<BookDocument | null> {
