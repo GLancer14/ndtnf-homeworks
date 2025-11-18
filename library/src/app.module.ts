@@ -7,6 +7,7 @@ import { BooksModule } from './books/books.module';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { BookCommentsModule } from './bookComments/bookComments.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     BooksModule,
     UsersModule,
     AuthModule,
+    BookCommentsModule,
   ],
   controllers: [AppController],
   providers: [AuthService, JwtService],
