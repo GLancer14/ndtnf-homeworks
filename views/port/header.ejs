@@ -1,0 +1,23 @@
+<header class="header">
+  <h1 class="container-header">
+    <a href="/" class="container-header_link">Библиотека</a>
+  </h1>
+  <nav class="library_menu">
+    <ul class="library_menu_list">
+      <% if (!user?._json.login) { %>
+        <li class="library_menu_list-item">
+          <a class="library_login_btn" href="/login">Вход</a>
+        </li>
+      <% } else { %>
+        <li class="library_menu_list-item">
+          <span class="library_add-book_btn">
+            Привет, <a class="library_signup_btn" href="/profile"><%= user?._json.login %></a>
+          </span>
+        </li>
+        <li class="library_menu_list-item">
+          <a class="library_add-book_btn" href="/logout">Выход</a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</header>

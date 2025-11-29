@@ -1,0 +1,14 @@
+<%- include("../port/layout-start") %>
+<%- include("../port/header", { user: user }) %>
+
+<h2 class="page-header">Профиль</h2>
+<div class="user-name">
+  Имя пользователя: <%= user?._json.login %>
+</div>
+<% if (user?._json?.default_email) { %>
+  <div class="user-email">
+    E-mail адрес: <%= user?._json.default_email %>
+  </div>
+<% } %>
+
+<%- include("../port/layout-end") %>
